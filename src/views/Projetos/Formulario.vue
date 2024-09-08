@@ -1,6 +1,5 @@
 <template>
   <section>
-    
     <form @submit.prevent="salvar">
       <div class="field">
         <label for="nomeDoProjeto" class="label"> Nome do Projeto </label>
@@ -21,47 +20,55 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { useStore } from "@/store";
-import { ALTERA_PROJETO, ADICIONA_PROJETO } from "@/store/tipo-mutacoes";
+import {ALTERA_PROJETO,ADICIONA_PROJETO,} from "@/store/tipo-mutacoes";
+import { TipoNotificacao } from "@/interface/INotificacao";
+// import { notificacaoMixin } from "@/mixins/notificar";
+import useNotificador from '@/hooks/notificador'
+
 
 export default defineComponent({
   name: "Formulario",
-  props : {
+  props: {
     id: {
       type: String,
-    }
+    },
   },
+  // mixins: [notificacaoMixin] Uma maneira de utilizar as notificações sem ser pelo store,
   mounted() {
-    if(this.id){
-      const projeto = this.store.state.projetos.find(proj => proj.id == this.id)
-      this.nomeDoProjeto = projeto?.nome || ''
+    if (this.id) {
+      const projeto = this.store.state.projetos.find(
+        (proj) => proj.id == this.id
+      );
+      this.nomeDoProjeto = projeto?.nome || "";
     }
   },
   data() {
     return {
-      nomeDoProjeto: ""
+      nomeDoProjeto: "",
     };
   },
   methods: {
     salvar() {
-      if(this.id){
+      if (this.id) {
         this.store.commit(ALTERA_PROJETO, {
           id: this.id,
-          nome: this.nomeDoProjeto
-        })
-      }else{
-        this.store.commit(ADICIONA_PROJETO, this.nomeDoProjeto)
+          nome: this.nomeDoProjeto,
+        });
+      } else {
+        this.store.commit(ADICIONA_PROJETO, this.nomeDoProjeto);
       }
-      this.nomeDoProjeto = '';
-      this.$router.push('/projetos')
+      this.nomeDoProjeto = "";
+      this.notificar(TipoNotificacao.SUCESSO, 'Excelente', 'Projeto Cadastrado Com Sucesso')
+      this.$router.push("/projetos");
     },
   },
   setup() {
-    const store = useStore()
-    return{
-      store
-    }
-  }
+    const store = useStore();
+    const {notificar} = useNotificador() 
+    return {
+      store,
+      notificar 
+    };
+  },
 });
 </script>
-
-

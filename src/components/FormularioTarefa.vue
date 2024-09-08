@@ -39,6 +39,8 @@ import { computed, defineComponent } from 'vue';
 import TemporizadorTarefas from './TemporizadorTarefas.vue';
 import { useStore } from 'vuex';
 import { key } from '@/store';
+import { NOTIFICAR } from '@/store/tipo-mutacoes';
+import { TipoNotificacao } from '@/interface/INotificacao';
 
 export default defineComponent({
   name: 'FormularioTarefa',
@@ -54,6 +56,20 @@ export default defineComponent({
   },
   methods:{
     finalizarTarefa(tempoDecorrido: number) : void {
+      //Verificação para ver se o projeto foi selecionado ou não
+      const projetoSelecionado = this.projetos.find(proj => proj.id == this.idProjeto);
+
+      //Caso não tenha sido selecionado Notifica
+      if(!projetoSelecionado){
+        this.store.commit(NOTIFICAR,{
+          titulo: 'Ops',
+          texto: 'É necessário associar um projeto a uma tarefa',
+          tipo: TipoNotificacao.FALHA
+        })
+        return;
+      }
+
+
       this.$emit('aoSalvarTarefa', {
         duracaoEmSegundos : tempoDecorrido,
         descricao : this.descricao,

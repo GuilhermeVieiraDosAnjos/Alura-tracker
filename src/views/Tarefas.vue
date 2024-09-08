@@ -3,10 +3,12 @@
     <FormularioTarefa @aoSalvarTarefa="salvarTarefa" />
     <div class="lista">
       <BoxVoid v-if="listaVazia"> Você Não Está muito Produtivo hoje </BoxVoid>
+      <!-- Pelo elemento pai estamos passando a tarefa e o projeto para ser retornado no box da tarefa -->
       <TarefaMain
         v-for="(tarefa, index) in tarefas"
         :key="index"
         :tarefa="tarefa"
+        :projeto="tarefa.projeto"
       />
     </div>
   </div>
