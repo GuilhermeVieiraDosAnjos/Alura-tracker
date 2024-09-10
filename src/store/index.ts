@@ -1,9 +1,11 @@
 import IProjeto from "@/interface/IProjeto";
 import { createStore, Store, useStore as vuexUseStore } from "vuex";
 import { InjectionKey } from "vue";
-import { ADICIONA_PROJETO, ADICIONA_TAREFA, ALTERA_PROJETO, ATUALIZA_TAREFA, EXCLUIR_PROJETO, EXCLUIR_TAREFA, NOTIFICAR } from "./tipo-mutacoes";
+import { ADICIONA_PROJETO, ADICIONA_TAREFA, ALTERA_PROJETO, ATUALIZA_TAREFA, DEFINIR_PROJETO, EXCLUIR_PROJETO, EXCLUIR_TAREFA, NOTIFICAR } from "./tipo-mutacoes";
 import ITarefa from "@/interface/ITarefa";
 import { INotificacao } from "@/interface/INotificacao";
+import { ALTERAR_PROJETOS, CADASTRAR_PROJETOS, DELETAR_PROJETOS, OBTER_PROJETOS } from "./tipo-acoes";
+import clienteHttp from "@/http";
 
 interface Estado {
   projetos : IProjeto[],
@@ -46,6 +48,9 @@ export const store = createStore<Estado>({
     [EXCLUIR_PROJETO](state, id: string){
       state.projetos = state.projetos.filter(proj => proj.id != id)
     },
+    [DEFINIR_PROJETO](state, projetos: IProjeto[]){
+      state.projetos = projetos
+    },
 
     [NOTIFICAR](state,  novaNotificacao: INotificacao){
       novaNotificacao.id = new Date().getTime()
@@ -54,11 +59,32 @@ export const store = createStore<Estado>({
       setTimeout(() => {
         state.notificacoes = state.notificacoes.filter(notificacao => notificacao.id != novaNotificacao.id)
       }, 3000)
+    },
+  },
+  actions: {
+    [OBTER_PROJETOS]({commit}){
+      clienteHttp.get('projetos')
+      .then(resposta => commit(DEFINIR_PROJETO, resposta.data))
+      .catch(e => {
+        console.error("Erro ao obter projeto", e)
+      })
+    },
+    [CADASTRAR_PROJETOS](context, nomeDoProjeto: string){
+      return clienteHttp.post('projetos',{
+        nome:nomeDoProjeto
+      })
+    },
+    [ALTERAR_PROJETOS](context, projeto: IProjeto ){
+      return clienteHttp.put(`/projetos/${projeto.id}`, projeto)
+    },
+    [DELETAR_PROJETOS]({commit}, id: string ){
+      return clienteHttp.delete(`/projetos/${id}`)
+        .then(() => commit(EXCLUIR_PROJETO, id))
     }
-
   }
 })
 
 export function useStore(): Store<Estado> {
   return vuexUseStore(key)
 }
+
