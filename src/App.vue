@@ -3,7 +3,7 @@
     class="columns is-gapless is-mutiline"
     :class="{ 'modo-escuro': modoEscuroAtivo }"
   >
-    <div class="column is-one-quarter">
+    <div class="column is-one-quarter ">
       <BarraLateral @aoTemaAlterado="trocarTema" />
     </div>
     <div class="column is-three-quarter conteudo">
@@ -35,6 +35,7 @@ export default defineComponent({
 </script>
 
 <style>
+
 .lista {
   padding: 1.25rem;
 }
@@ -42,6 +43,8 @@ export default defineComponent({
 main {
   --bg-primario: #fff;
   --texto-primario: #000;
+  display: flex;
+  min-height: 100vh;
 }
 
 main.modo-escuro {

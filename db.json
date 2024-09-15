@@ -1,12 +1,62 @@
 {
   "projetos": [
     {
-      "id": "1",
-      "nome": "Alura Tracker 3.0"
+      "id": "9d9a",
+      "nome": "Alem da vida"
     },
     {
-      "id": "7b3c",
+      "id": "8133",
+      "nome": "Guilherme Vieira dos Anjos 15/03/2002 Adriana Vieira Alves"
+    },
+    {
+      "id": "42df",
       "nome": "Vue3: explorando o framework"
+    },
+    {
+      "id": "20c8",
+      "nome": "Drive me crazy"
+    },
+    {
+      "id": "04cd",
+      "nome": "New Project"
+    }
+  ],
+  "tarefas": [
+    {
+      "id": "1",
+      "duracaoEmSegundos": 120,
+      "descricao": "Configuração do ambiente",
+      "projeto": {
+        "id": 1,
+        "nome": "Alura Tracker 3.0"
+      }
+    },
+    {
+      "id": "54b1",
+      "duracaoEmSegundos": 3,
+      "descricao": "Alem da Vidaa",
+      "projeto": {
+        "id": "1",
+        "nome": "Alura Tracker 3.0"
+      }
+    },
+    {
+      "id": "40aa",
+      "duracaoEmSegundos": 4,
+      "descricao": "tem gente demais no mundo ",
+      "projeto": {
+        "id": "9d9a",
+        "nome": "Alem da mortess"
+      }
+    },
+    {
+      "id": "4aca",
+      "duracaoEmSegundos": 2,
+      "descricao": "alem ",
+      "projeto": {
+        "id": "8133",
+        "nome": "Guilherme Vieira dos Anjos 15/03/2002 Adriana Vieira Alves"
+      }
     }
   ]
 }

@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import TemporizadorTarefas from './TemporizadorTarefas.vue';
 import { useStore } from 'vuex';
 import { key } from '@/store';
@@ -48,41 +48,41 @@ export default defineComponent({
     TemporizadorTarefas
   },
   emits: ['aoSalvarTarefa'],
-  data () {
-    return {
-      descricao : '',
-      idProjeto : '' 
-    }
-  },
-  methods:{
-    finalizarTarefa(tempoDecorrido: number) : void {
+
+  setup (props, {emit}) {
+    const store = useStore(key)
+
+    const descricao = ref("")
+    const idProjeto= ref("")
+
+    const projetos =  computed(()=> store.state.projeto.projetos)
+
+    const finalizarTarefa = (tempoDecorrido: number) : void => {
       //Verificação para ver se o projeto foi selecionado ou não
-      const projetoSelecionado = this.projetos.find(proj => proj.id == this.idProjeto);
+      const projetoSelecionado = projetos.value.find(proj => proj.id == idProjeto.value);
 
       //Caso não tenha sido selecionado Notifica
       if(!projetoSelecionado){
-        this.store.commit(NOTIFICAR,{
+        store.commit(NOTIFICAR,{
           titulo: 'Ops',
           texto: 'É necessário associar um projeto a uma tarefa',
           tipo: TipoNotificacao.FALHA
         })
         return;
       }
-
-
-      this.$emit('aoSalvarTarefa', {
+      emit('aoSalvarTarefa', {
         duracaoEmSegundos : tempoDecorrido,
-        descricao : this.descricao,
-        projeto: this.projetos.find(proj => proj.id == this.idProjeto)
+        descricao : descricao.value,
+        projeto: projetos.value.find(proj => proj.id == idProjeto.value)
       })
-      this.descricao = '';
+      descricao.value = '';
     }
-  },
-  setup () {
-    const store = useStore(key)
+
     return {
-      projetos: computed(()=> store.state.projetos),
-      store
+      projetos: computed(()=> store.state.projeto.projetos),
+      descricao,
+      idProjeto,
+      finalizarTarefa
     }
   }
 })

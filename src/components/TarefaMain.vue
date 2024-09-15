@@ -1,6 +1,6 @@
 <template>
   <BoxVoid>
-    <div class="columns">
+    <div class="columns clicavel" @click="tarefaClicada">
       <div class="column is-7">{{ tarefa.descricao || 'Tarefa sem descrição' }}</div>
       <div class="column">
         <CronometroTarefas :tempoEmSegundos="tarefa.duracaoEmSegundos"/>
@@ -20,6 +20,7 @@ import IProjeto from "@/interface/IProjeto";
 
 export default defineComponent({
   name: "TarefaMain",
+  emits: ['aoTarefaClicada'],
   components: {
     CronometroTarefas,
     BoxVoid
@@ -27,7 +28,7 @@ export default defineComponent({
   props: {
     tarefa: {
       type: Object as PropType<ITarefa>,
-      required: true
+      required : true
     },
     //Pegando a prop de projeto e o type da Interface
     projeto: {
@@ -35,8 +36,20 @@ export default defineComponent({
       required: true
     },
   },
-  mounted(){
-    console.log('Projeto recebido', this.projeto);
-  }
+  setup(props, {emit}) {
+    const  tarefaClicada = () : void => {
+      emit('aoTarefaClicada', props.tarefa)
+    }
+
+    return{
+      tarefaClicada
+    }
+  },
 });
 </script>
+
+<style scoped>
+.clicavel{
+  cursor: pointer;
+}
+</style>
